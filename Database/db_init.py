@@ -44,9 +44,9 @@ def insert_manager():
     with DBConnector() as db:
         for _ in range(5):
             query = f"""
-            INSERT INTO "Manager" (name) values ('{faker.name()}');
+            INSERT INTO "Manager" (name) values (%s);
             """
-            db.curr.execute(query=query)
+            db.curr.execute(query, (faker.name(),))
             db.connection.commit()
 
 
@@ -73,9 +73,9 @@ def insert_departments():
     with DBConnector() as db:
         for department, manager in zip(departments, get_managers()):
             query = f"""
-            INSERT INTO "Department" (dept_name, parent_dept_id, manager_id) values ('{department}', 1, {manager[0]});
+            INSERT INTO "Department" (dept_name, parent_dept_id, manager_id) values (%s, %s, %s);
             """
-            db.curr.execute(query=query)
+            db.curr.execute(query, (department, 1, manager[0]))
             db.connection.commit()
 
 
