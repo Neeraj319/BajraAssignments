@@ -29,10 +29,10 @@ def print_employees_belonging_to_sales():
 
         query = """
         SELECT e.* FROM "Employee" e 
-	    INNER JOIN "Department" d on d.d_id = 4
+	    INNER JOIN "Department" d on d.dept_name = 'Sales'
 	    WHERE EXTRACT(year FROM age(now():: DATE, e.join_date)) 
 	    * 12 + EXTRACT(month FROM age(now():: DATE, 
-        e.join_date)) > 6;
+        e.join_date)) > 6 and e.dept_id = 4;
         """
 
         fetched_data = pd.read_sql(query, db.connection)
