@@ -1,0 +1,20 @@
+version: "3.9"
+
+
+services:
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:543
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=assignment_1
+
+
+volumes:
+  postgres_data:
+
+
