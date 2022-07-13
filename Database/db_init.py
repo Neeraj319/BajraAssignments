@@ -8,7 +8,6 @@ import sys
 *extras, command = sys.argv
 
 dotenv.load_dotenv()
-faker = faker.Faker()
 
 
 class DBConnector:
@@ -122,4 +121,5 @@ def main():
 
 
 if __name__ == "__main__":
+    faker = faker.Faker()
     main()
