@@ -8,6 +8,11 @@ warnings.filterwarnings("ignore")
 
 
 def print_total_earnings():
+    """
+    prints out the total earnings of employees grouped by departments
+    with proper formatting
+    """
+
     with db_init.DBConnector() as db:
 
         query = f"""
@@ -25,6 +30,9 @@ def print_total_earnings():
 
 
 def print_employees_belonging_to_sales():
+    """
+    prints out all employees belonging to a department sales with service length more than 6 months
+    """
     with db_init.DBConnector() as db:
 
         query = """
@@ -40,6 +48,9 @@ def print_employees_belonging_to_sales():
 
 
 def print_employees_with_department_name():
+    """
+    prints out all employees with their department name and manager name
+    """
 
     with db_init.DBConnector() as db:
 
