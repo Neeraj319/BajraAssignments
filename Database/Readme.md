@@ -44,9 +44,7 @@ pip install -r requirements.txt
 ## create env vars
 - Create .env file and add vars according to .env.example file
 ## Initialize the database 
-```bash
-docker-compose up --build
-```
+Create a postgres database and add its url to .env file
 - Run only once
 ```
 python db_init.py initialize
