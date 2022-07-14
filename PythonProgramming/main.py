@@ -65,7 +65,6 @@ class Solution:
         sum_list = [i + int(j) for i, j in zip(self.character_dict, self.keys_list)]
         print("tressure: ", end="")
         print(*[chr(i) for i in sum_list], sep="")
-        return self
 
 
 if __name__ == "__main__":
