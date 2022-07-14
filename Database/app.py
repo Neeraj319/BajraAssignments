@@ -1,10 +1,8 @@
 import db_init
 import pandas as pd
-import warnings
 
 # pandas doesn't support the psycopg2 connection object
 # since this is a small project i am suppressing warning thrown by pandas
-warnings.filterwarnings("ignore")
 
 
 def print_total_earnings():
@@ -13,7 +11,7 @@ def print_total_earnings():
     with proper formatting
     """
 
-    with db_init.DBConnector() as db:
+    with db_init.engine.connect() as db:
 
         query = f"""
         SELECT d.dept_name as "department name", SUM (e.monthly_salary * 
@@ -25,7 +23,7 @@ def print_total_earnings():
         GROUP BY d.dept_name; 
         """
 
-        fetched_data = pd.io.sql.read_sql(query, db.connection)
+        fetched_data = pd.io.sql.read_sql(query, db)
         print(fetched_data)
 
 
@@ -33,7 +31,7 @@ def print_employees_belonging_to_sales():
     """
     prints out all employees belonging to a department sales with service length more than 6 months
     """
-    with db_init.DBConnector() as db:
+    with db_init.engine.connect() as db:
 
         query = """
         SELECT e.* FROM "Employee" e 
@@ -43,7 +41,7 @@ def print_employees_belonging_to_sales():
         e.join_date)) > 6 and e.dept_id = 4;
         """
 
-        fetched_data = pd.read_sql(query, db.connection)
+        fetched_data = pd.read_sql(query, db)
         print(fetched_data)
 
 
@@ -52,7 +50,7 @@ def print_employees_with_department_name():
     prints out all employees with their department name and manager name
     """
 
-    with db_init.DBConnector() as db:
+    with db_init.engine.connect() as db:
 
         query = """
         SELECT e.first_name, e.last_name,d.dept_name, m."name" as 
@@ -64,7 +62,7 @@ def print_employees_with_department_name():
         d.manager_id = m.m_id;
         """
 
-        fetched_data = pd.read_sql(query, db.connection)
+        fetched_data = pd.read_sql(query, db)
         print(fetched_data)
 
 
