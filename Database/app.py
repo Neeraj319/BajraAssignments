@@ -1,9 +1,6 @@
 import db_init
 import pandas as pd
 
-# pandas doesn't support the psycopg2 connection object
-# since this is a small project i am suppressing warning thrown by pandas
-
 
 def print_total_earnings():
     """
