@@ -103,16 +103,7 @@ def signup_receptionist(request: HttpRequest):
             last_name = request.POST.get("last_name")
             email = request.POST.get("email")
             phone = request.POST.get("phone")
-            print(
-                username,
-                password,
-                confirm_password,
-                first_name,
-                last_name,
-                email,
-                phone,
-            )
-
+            
             if message := validate_credentials(
                 username=username,
                 password=password,
