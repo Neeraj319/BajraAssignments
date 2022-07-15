@@ -8,6 +8,7 @@ from .models import Patient, Appointment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from typing import Any
+from Auth.mixins import IsReceptionistMixin
 
 # Create your views here.
 
@@ -49,7 +50,7 @@ class CreatePatientRecordView(FormView):
         return "/"
 
 
-class PatientListView(LoginRequiredMixin, ListView):
+class PatientListView(LoginRequiredMixin, IsReceptionistMixin, ListView):
     model = Patient
 
     def get_context_data(self, **kwargs):
@@ -58,7 +59,7 @@ class PatientListView(LoginRequiredMixin, ListView):
         return context
 
 
-class ReceptionistDashboard(LoginRequiredMixin, TemplateView):
+class ReceptionistDashboard(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
     template_name = "receptionist_dashboard.html"
 
     def get_context_data(self, **kwargs):
