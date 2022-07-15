@@ -1,15 +1,27 @@
-<html>
-  <head>
-    <title>
-      Doctoring
-    </title>
+{% extends 'base.html' %}
+{% block head %}
+<title>
+  Doctoring
+</title>
+{% endblock %}
+{% block body %}
+<div class="container">
 
-  </head>
-<body>
   <h1>
-     Create an Appointment 
+    Create an Appointment
   </h1>
-  {{form.as_p}}
-</body>
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <form action="{% url 'patient' %}" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" class="btn btn-primary" value="submit">
+  </form>
 
-</html>
+</div>
+{% endblock %}
