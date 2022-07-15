@@ -75,7 +75,7 @@ class PatientDetailView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, FormView):
+class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
     template_name = "patient_edit.html"
 
     def get_context_data(self, **kwargs):

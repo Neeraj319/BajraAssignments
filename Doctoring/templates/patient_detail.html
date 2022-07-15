@@ -11,7 +11,7 @@
         <div class="col-md-12">
             <h1>
                 {{patient.name}}
-                <a href="" class='btn btn-primary'>
+                <a href={% url 'patient_appointment_add' patient.pk %} class='btn btn-primary'>
 
                     Add new appointment
                 </a>
