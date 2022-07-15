@@ -1,8 +1,120 @@
+{% extends 'base.html' %}
 {% load static %}
 
-{% extends 'base.html' %}
 
 {% block head %}
 <title>signup</title>
 {% endblock head %}
 
+{% block body %}
+<div class="container">
+    <!-- create a doctor signup -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Signup</h3>
+        </div>
+        <button class='btn btn-dark toggle'> as a receptionist?</button>
+        <br>
+        <br>
+        {% if messages %}
+        <div class="panel-body">
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="signup-div">
+
+        </div>
+
+    </div>
+
+
+    <script>
+        const signUpDiv = document.querySelector(".signup-div");
+        const toggle = document.querySelector(".toggle");
+        let DOCTORSIGNUP = true
+
+        function createDoctorSignup() {
+            const doctorSignup = document.createElement("div");
+            doctorSignup.classList.add("doctor-signup");
+            doctorSignup.innerHTML = `
+       <form class="doctor-signup-form" method = 'post' action = {% url 'signup_doctor' %}>
+        {% csrf_token %}
+            <h2>Doctor Signup</h2>
+            <label for="username">username</label>
+            <input type="text" name="username" class = 'form-control' id="username" required>
+            <label for="firstname">First Name</label>
+            <input type="text" name="first_name" id="firstname" class = 'form-control' required>
+            <label for="lastname">Last Name</label>
+            <input type="text" name="last_name" class = 'form-control' id="lastname" required>
+            <label for="email">Email</label>
+            <input type="email" name="email" class = 'form-control' id="email" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" class = 'form-control' id="password" required>
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password" class = 'form-control' id="confirm-password" required>
+            <label for="phone">Phone</label>
+            <input type="text" name="phone" class = 'form-control' id="phone" required>
+            <label for = 'years-of-experience'>Years of Experience</label>
+            <input type="number" class = 'form-control' name="years_practiced" id="years-of-experience" required>
+            <label for = 'qualification'>Qualification</label>
+            <input type="text" class = 'form-control' name="qualification" id="qualification" required>
+            <label for = 'gender'>Gender</label>
+            <select name = 'gender' class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+            <option selected>Open this select menu</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            </select>
+            <input class = 'btn btn-primary' type = 'submit' value = 'submit'/>
+        `
+            toggle.innerHTML = "as a receptionist?"
+            signUpDiv.appendChild(doctorSignup)
+        }
+        createDoctorSignup()
+
+        function createReceptionistSignUp() {
+            const receptionistSignup = document.createElement("div");
+            receptionistSignup.classList.add("receptionist-signup");
+            receptionistSignup.innerHTML = `
+        <form class="receptionist-signup-form" method = 'post'>
+        {% csrf_token %}
+            <h2>Receptionist Signup</h2>
+            <label for="username">username</label>
+            <input type="text" name="username" class = 'form-control' id="username" required>
+            <label for="firstname">First Name</label>
+            <input type="text" name="first_name" id="firstname" class = 'form-control' required>
+            <label for="lastname">Last Name</label>
+            <input type="text" name="las_tname" class = 'form-control' id="lastname" required>
+            <label for="email">Email</label>
+            <input type="email" name="email" class = 'form-control' id="email" required>
+            <label for="password">Password</label>
+            <input type="password" name="password" class = 'form-control' id="password" required>
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" name="confirm_password" class = 'form-control' id="confirm-password" required>
+            <label for="phone">Phone</label>
+            <input type="text" name="phone" class = 'form-control' id="phone" required>
+            <br>
+            <input type = 'submit' class = 'btn btn-primary' value = 'submit'/>
+        `
+            toggle.innerText = "as a doctor?"
+            signUpDiv.appendChild(receptionistSignup)
+        }
+
+        toggle.addEventListener('click', () => {
+            signUpDiv.removeChild(signUpDiv.lastElementChild)
+            if (DOCTORSIGNUP) {
+                DOCTORSIGNUP = false
+                createReceptionistSignUp()
+            }
+            else {
+
+                createDoctorSignup()
+                DOCTORSIGNUP = true
+            }
+        })
+
+    </script>
+    {% endblock body %}
