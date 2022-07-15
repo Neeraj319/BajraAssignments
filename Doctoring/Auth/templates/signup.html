@@ -79,7 +79,7 @@
             const receptionistSignup = document.createElement("div");
             receptionistSignup.classList.add("receptionist-signup");
             receptionistSignup.innerHTML = `
-        <form class="receptionist-signup-form" method = 'post'>
+        <form class="receptionist-signup-form" method = 'post' action = {% url 'signup_receptionist' %}>
         {% csrf_token %}
             <h2>Receptionist Signup</h2>
             <label for="username">username</label>
@@ -87,7 +87,7 @@
             <label for="firstname">First Name</label>
             <input type="text" name="first_name" id="firstname" class = 'form-control' required>
             <label for="lastname">Last Name</label>
-            <input type="text" name="las_tname" class = 'form-control' id="lastname" required>
+            <input type="text" name="last_name" class = 'form-control' id="lastname" required>
             <label for="email">Email</label>
             <input type="email" name="email" class = 'form-control' id="email" required>
             <label for="password">Password</label>
