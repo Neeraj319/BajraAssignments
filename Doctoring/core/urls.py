@@ -7,6 +7,7 @@ from .views import (
     ReceptionistDashboard,
     PatientDetailView,
     PatientEditView,
+    DeletePatientView,
 )
 
 urlpatterns = [
@@ -24,5 +25,10 @@ urlpatterns = [
         "patient/<int:pk>/appointment/edit",
         view=AppointmentCreationView.as_view(),
         name="patient_appointment_add",
+    ),
+    path(
+        "patient/<int:pk>/delete",
+        view=DeletePatientView.as_view(),
+        name="patient_delete",
     ),
 ]

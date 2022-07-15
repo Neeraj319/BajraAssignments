@@ -20,7 +20,8 @@
                     Update patient
 
                 </a>
-                <a href="" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                <a href={% url 'patient_delete' patient.pk %} class="btn btn-danger" target="_blank"
+                    rel="noopener noreferrer">
                     Delete patient
                 </a>
             </h1>

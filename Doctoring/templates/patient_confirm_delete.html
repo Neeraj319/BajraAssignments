@@ -1,20 +1,19 @@
+
 {% extends 'base.html' %}
 {% block head %}
 <title>
-
-    edit patient
+    delete patient
 </title>
 {% endblock head %}
 {% block body %}
 {% include 'navbar.html' %}
 <div class="container">
-    <form method="post">
+<form method="post">
         {% csrf_token %}
-        {{form}}
-        <br>
-        <input class="btn btn-warning" type="submit" value="update patient">
-    </form>
-
+    <p>Are you sure you want to delete patient "{{ object }}"?</p>
+    {{ form }}
+    <input class = "btn btn-danger" type="submit" value="Confirm">
+</form>
 </div>
 
 {% endblock body %}

@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from .forms import PatientCreationForm, AppointmentCreationForm
 from django.views.generic import TemplateView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, DeleteView
 from django.contrib import messages
 from django.views.generic.list import ListView
 from .models import Patient, Appointment
@@ -110,3 +110,24 @@ class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, FormView)
 
     def get_success_url(self) -> str:
         return "/patient/{}".format(self.kwargs["pk"])
+
+
+class DeletePatientView(LoginRequiredMixin, IsReceptionistMixin, DeleteView):
+    model = Patient
+    success_url = "/"
+    template_name: str = "patient_confirm_delete.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["patient"] = Patient.objects.get(pk=self.kwargs["pk"])
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(
+            self.request,
+            "Your patient record has been deleted successfully.",
+        )
+        return super().delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return "/"
