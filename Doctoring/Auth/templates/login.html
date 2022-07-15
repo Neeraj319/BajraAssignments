@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>
+    login
+</title>
+{% endblock head %}
+{% block body %}
+<div class="container">
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Login</h3>
+                </div>
+
+                    <form accept-charset="UTF-8" role="form" method="post">
+                        {% csrf_token %} 
+                            <p>
+                            <input type = 'text' name = 'username' placeholder = 'username' class = 'form-control' required autofocus>
+                            </p>
+                            <p>
+                            <input type = 'password' name = 'password' placeholder = 'password' class = 'form-control' required>
+                            </p>
+                            <input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+                    </form>
+     
+    </div>
+
+{% endblock body %}
+
+
+
