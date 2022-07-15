@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>
+    patient | {{patient.name}}
+</title>
+{% endblock head %}
+{% block body %}
+{% include 'navbar.html' %}
+<div class="container">
+    {{patient.name}}
+
+</div>
+
+{% endblock body %}

@@ -1,10 +1,22 @@
+from django.http import HttpRequest
 from .forms import PatientCreationForm
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib import messages
-
+from django.views.generic.list import ListView
+from .models import Patient, Appointment
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from typing import Any
 
 # Create your views here.
+
+
+def return_to_dashboard(request: HttpRequest):
+    if hasattr(request.user, "receptionist"):
+        return redirect("receptionist_dashboard")
+    else:
+        return redirect("doctor_dashboard")
 
 
 class IndexView(TemplateView):
@@ -14,6 +26,12 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["form"] = PatientCreationForm()
         return context
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
+        if request.user.is_authenticated:
+            return return_to_dashboard(request)
+        else:
+            return super(IndexView, self).dispatch(request, *args, **kwargs)
 
 
 class CreatePatientRecordView(FormView):
@@ -29,3 +47,30 @@ class CreatePatientRecordView(FormView):
 
     def get_success_url(self):
         return "/"
+
+
+class PatientListView(LoginRequiredMixin, ListView):
+    model = Patient
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["appointments"] = Appointment.objects.filter(patient=self.object)
+        return context
+
+
+class ReceptionistDashboard(LoginRequiredMixin, TemplateView):
+    template_name = "receptionist_dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["patients"] = Patient.objects.filter(appointment__isnull=True)
+        return context
+
+
+class PatientDetailView(LoginRequiredMixin, TemplateView):
+    template_name = "patient_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["patient"] = Patient.objects.get(pk=kwargs["pk"])
+        return context
