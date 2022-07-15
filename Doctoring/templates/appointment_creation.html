@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>
+    add appointment
+</title>
+{% endblock head %}
+{% block body %}
+{% include 'navbar.html' %}
+
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{form}}
+        <br>
+        <input class="btn btn-warning" type="submit" value="add appointment">
+    </form>
+
+
+</div>
+
+{% endblock body %}

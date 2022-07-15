@@ -1,5 +1,5 @@
 from django.http import HttpRequest
-from .forms import PatientCreationForm
+from .forms import PatientCreationForm, AppointmentCreationForm
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib import messages
@@ -9,8 +9,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from typing import Any
 from Auth.mixins import IsReceptionistMixin
-
-# Create your views here.
 
 
 def return_to_dashboard(request: HttpRequest):
@@ -75,3 +73,40 @@ class PatientDetailView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["patient"] = Patient.objects.get(pk=kwargs["pk"])
         return context
+
+
+class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, FormView):
+    template_name = "patient_edit.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["patient"] = Patient.objects.get(pk=kwargs["pk"])
+        context["form"] = PatientCreationForm(instance=context["patient"])
+        return context
+
+    def post(self, request, *args, **kwargs):
+        patient = Patient.objects.get(pk=kwargs["pk"])
+        form = PatientCreationForm(request.POST, instance=patient)
+        if form.is_valid():
+            form.save()
+            return redirect("patient_detail", pk=kwargs["pk"])
+        return self.get(request, *args, **kwargs)
+
+
+class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, FormView):
+    template_name = "appointment_creation.html"
+    form_class = AppointmentCreationForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        self.patient = Patient.objects.get(pk=self.kwargs["pk"])
+        context["form"] = AppointmentCreationForm()
+        return context
+
+    def form_is_valid(self, form):
+        form["patient"] = self.patient
+        form.save()
+        return super().form_is_valid(form)
+
+    def get_success_url(self) -> str:
+        return "/patient/{}".format(self.kwargs["pk"])

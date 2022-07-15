@@ -7,8 +7,36 @@
 {% block body %}
 {% include 'navbar.html' %}
 <div class="container">
-    {{patient.name}}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>
+                {{patient.name}}
+                <a href="" class='btn btn-primary'>
 
-</div>
+                    Add new appointment
+                </a>
+                <a href={% url 'patient_edit' patient.pk %} class="btn btn-success" target="_blank"
+                    rel="noopener noreferrer">
+                    Update patient
 
-{% endblock body %}
+                </a>
+                <a href="" class="btn btn-danger" target="_blank" rel="noopener noreferrer">
+                    Delete patient
+                </a>
+            </h1>
+            phone number: {{patient.phone}}
+            <br>
+            email: {{patient.email}}
+            <br>
+            address: {{patient.address}}
+            <br>
+            problem : {{patient.issue}}
+            <br>
+            Date Of Birth : {{patient.date_of_birth}}
+            <br>
+
+
+        </div>
+    </div>
+
+    {% endblock body %}

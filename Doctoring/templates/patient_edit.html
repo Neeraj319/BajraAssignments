@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>
+
+    edit patient
+</title>
+{% endblock head %}
+{% block body %}
+{% include 'navbar.html' %}
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{form}}
+        <br>
+        <input class="btn btn-warning" type="submit" value="update patient">
+    </form>
+
+</div>
+
+
+{% endblock body %}

@@ -12,6 +12,7 @@ class Doctor(models.Model):
     gender = models.CharField(max_length=20, choices=GENDER_CHOICES)
     years_practiced = models.IntegerField()
     qualification = models.CharField(max_length=200)
+    available = models.BooleanField(default=True, null=True)
 
     def __str__(self: "Doctor"):
         return f"{self.user.first_name} {self.user.last_name}"
