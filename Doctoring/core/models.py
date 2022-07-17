@@ -13,18 +13,18 @@ class Patient(models.Model):
 
     issue = models.TextField(null=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
 class Appointment(models.Model):
-    patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
+    patient: Patient = models.OneToOneField(Patient, on_delete=models.CASCADE)
     date = models.DateField()
     time = models.TimeField()
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    doctor: Doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     done = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.patient.name

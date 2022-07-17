@@ -1,4 +1,5 @@
-from django.http import HttpRequest
+import imp
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from .forms import PatientCreationForm, AppointmentCreationForm
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView, DeleteView
@@ -10,6 +11,7 @@ from django.shortcuts import redirect
 from typing import Any
 from Auth.mixins import IsDoctorMixin, IsReceptionistMixin
 from Auth.models import Doctor
+from django.db.models import QuerySet
 
 
 def return_to_dashboard(request: HttpRequest):
@@ -20,14 +22,16 @@ def return_to_dashboard(request: HttpRequest):
 
 
 class IndexView(TemplateView):
-    template_name = "index.html"
+    template_name: str = "index.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["form"] = PatientCreationForm()
+        context["form"]: PatientCreationForm = PatientCreationForm()
         return context
 
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any):
+    def dispatch(
+        self, request: HttpRequest, *args: Any, **kwargs: Any
+    ) -> HttpResponseRedirect | HttpResponse:
         if request.user.is_authenticated:
             return return_to_dashboard(request)
         else:
@@ -35,9 +39,9 @@ class IndexView(TemplateView):
 
 
 class CreatePatientRecordView(FormView):
-    form_class = PatientCreationForm
+    form_class: PatientCreationForm = PatientCreationForm
 
-    def form_valid(self, form: PatientCreationForm):
+    def form_valid(self, form: PatientCreationForm) -> HttpResponseRedirect:
         form.save()
         messages.success(
             self.request,
@@ -45,36 +49,36 @@ class CreatePatientRecordView(FormView):
         )
         return super().form_valid(form)
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return "/"
 
 
 class AppointmentListView(LoginRequiredMixin, IsReceptionistMixin, ListView):
-    model = Appointment
+    model: Appointment = Appointment
     template_name: str = "all_appointments.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["appointments"] = Appointment.objects.all()
+        context["appointments"]: Appointment = Appointment.objects.all()
         return context
 
 
 class ReceptionistDashboard(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
-    template_name = "receptionist_dashboard.html"
+    template_name: str = "receptionist_dashboard.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         query_set = Patient.objects.filter(appointment__isnull=True)
-        context["patients"] = query_set
+        context["patients"]: Patient = query_set
         return context
 
 
 class PatientDetailView(LoginRequiredMixin, TemplateView):
-    template_name = "patient_detail.html"
+    template_name: str = "patient_detail.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["patient"] = Patient.objects.get(pk=kwargs["pk"])
+        context["patient"]: Patient = Patient.objects.get(pk=kwargs["pk"])
 
         return context
 
@@ -82,15 +86,17 @@ class PatientDetailView(LoginRequiredMixin, TemplateView):
 class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
     template_name = "patient_edit.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["patient"] = Patient.objects.get(pk=kwargs["pk"])
-        context["form"] = PatientCreationForm(instance=context["patient"])
+        context["patient"]: Patient = Patient.objects.get(pk=kwargs["pk"])
+        context["form"]: PatientCreationForm = PatientCreationForm(
+            instance=context["patient"]
+        )
         return context
 
-    def post(self, request, *args, **kwargs):
-        patient = Patient.objects.get(pk=kwargs["pk"])
-        form = PatientCreationForm(request.POST, instance=patient)
+    def post(self, request, *args, **kwargs) -> HttpResponseRedirect | HttpResponse:
+        patient: Patient = Patient.objects.get(pk=kwargs["pk"])
+        form: PatientCreationForm = PatientCreationForm(request.POST, instance=patient)
         if form.is_valid():
             form.save()
             return redirect("patient_detail", pk=kwargs["pk"])
@@ -100,15 +106,15 @@ class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
 class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, TemplateView):
     template_name = "appointment_creation.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         self.patient = Patient.objects.get(pk=self.kwargs["pk"])
-        context["form"] = AppointmentCreationForm()
-        context["patient"] = self.patient
+        context["form"]: AppointmentCreationForm = AppointmentCreationForm()
+        context["patient"]: Patient = self.patient
         return context
 
-    def post(self, request, *args, **kwargs):
-        form = AppointmentCreationForm(request.POST)
+    def post(self, request, *args, **kwargs) -> HttpResponseRedirect | HttpResponse:
+        form: AppointmentCreationForm = AppointmentCreationForm(request.POST)
         if form.is_valid():
             form.cleaned_data["patient"] = Patient.objects.get(pk=self.kwargs["pk"])
             Appointment.objects.create(**form.cleaned_data)
@@ -121,44 +127,46 @@ class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, TemplateV
 
 
 class DeletePatientView(LoginRequiredMixin, IsReceptionistMixin, DeleteView):
-    model = Patient
-    success_url = "/"
+    model: Patient = Patient
+    success_url: str = "/"
     template_name: str = "patient_confirm_delete.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["patient"] = Patient.objects.get(pk=self.kwargs["pk"])
+        context["patient"]: Patient = Patient.objects.get(pk=self.kwargs["pk"])
         return context
 
-    def delete(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs) -> HttpResponse:
         messages.success(
             self.request,
             "Your patient record has been deleted successfully.",
         )
         return super().delete(request, *args, **kwargs)
 
-    def get_success_url(self):
+    def get_success_url(self) -> str:
         return "/"
 
 
 class DoctorDashboard(LoginRequiredMixin, IsDoctorMixin, TemplateView):
-    template_name = "doctor_dashboard.html"
+    template_name: str = "doctor_dashboard.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["appointments"] = Appointment.objects.filter(
+        context["appointments"]: QuerySet[Appointment] = Appointment.objects.filter(
             doctor=self.request.user.doctor, done=False
         )
         return context
 
 
 class ChangeAppointmentStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["appointment"] = Appointment.objects.get(pk=self.kwargs["pk"])
+        context["appointment"]: Appointment = Appointment.objects.get(
+            pk=self.kwargs["pk"]
+        )
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponseRedirect:
         appointment = Appointment.objects.get(pk=self.kwargs["pk"])
         appointment.done = not appointment.done
         appointment.save()
@@ -168,21 +176,21 @@ class ChangeAppointmentStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
 class DoctorListAllAppointments(LoginRequiredMixin, IsDoctorMixin, TemplateView):
     template_name = "doctor_appointments.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["appointments"] = Appointment.objects.filter(
+        context["appointments"]: QuerySet[Appointment] = Appointment.objects.filter(
             doctor=self.request.user.doctor
         )
         return context
 
 
 class ChangeDoctorStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["doctor"] = Doctor.objects.get(pk=self.kwargs["pk"])
         return context
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponseRedirect:
         doctor = request.user.doctor
         doctor.available = not doctor.available
         doctor.save()

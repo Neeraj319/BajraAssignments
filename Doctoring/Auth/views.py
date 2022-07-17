@@ -1,12 +1,12 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate, logout
-from django.http import HttpRequest
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from .models import Doctor, Receptionist
 from django.contrib.auth.models import User
 
 
-def login_user(request: HttpRequest):
+def login_user(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if not request.user.is_authenticated:
 
         if request.method == "POST":
@@ -25,14 +25,14 @@ def login_user(request: HttpRequest):
         return redirect("dashboard")
 
 
-def signup(request: HttpRequest):
+def signup(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if not request.user.is_authenticated:
         return render(request, "signup.html")
     else:
         return redirect("dashboard")
 
 
-def validate_credentials(username, password, confirm_password, phone):
+def validate_credentials(username, password, confirm_password, phone) -> str | None:
     if User.objects.filter(username=username).first():
         return "Username already exists"
     if password != confirm_password:
@@ -43,7 +43,7 @@ def validate_credentials(username, password, confirm_password, phone):
         return "Phone number must be smaller than 15 digits"
 
 
-def signup_doctor(request: HttpRequest):
+def signup_doctor(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if not request.user.is_authenticated:
 
         if request.method == "POST":
@@ -92,7 +92,7 @@ def signup_doctor(request: HttpRequest):
         return redirect("dashboard")
 
 
-def signup_receptionist(request: HttpRequest):
+def signup_receptionist(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if not request.user.is_authenticated:
 
         if request.method == "POST":
@@ -103,7 +103,7 @@ def signup_receptionist(request: HttpRequest):
             last_name = request.POST.get("last_name")
             email = request.POST.get("email")
             phone = request.POST.get("phone")
-            
+
             if message := validate_credentials(
                 username=username,
                 password=password,
