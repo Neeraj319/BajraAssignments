@@ -8,7 +8,7 @@ from .models import Patient, Appointment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from typing import Any
-from Auth.mixins import IsReceptionistMixin
+from Auth.mixins import IsDoctorMixin, IsReceptionistMixin
 
 
 def return_to_dashboard(request: HttpRequest):
@@ -48,12 +48,13 @@ class CreatePatientRecordView(FormView):
         return "/"
 
 
-class PatientListView(LoginRequiredMixin, IsReceptionistMixin, ListView):
-    model = Patient
+class AppointmentListView(LoginRequiredMixin, IsReceptionistMixin, ListView):
+    model = Appointment
+    template_name: str = "all_appointments.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["appointments"] = Appointment.objects.filter(patient=self.object)
+        context["appointments"] = Appointment.objects.all()
         return context
 
 
@@ -62,7 +63,8 @@ class ReceptionistDashboard(LoginRequiredMixin, IsReceptionistMixin, TemplateVie
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["patients"] = Patient.objects.filter(appointment__isnull=True)
+        query_set = Patient.objects.filter(appointment__isnull=True)
+        context["patients"] = query_set
         return context
 
 
@@ -131,3 +133,14 @@ class DeletePatientView(LoginRequiredMixin, IsReceptionistMixin, DeleteView):
 
     def get_success_url(self):
         return "/"
+
+
+class DoctorDashboard(LoginRequiredMixin, IsDoctorMixin, TemplateView):
+    template_name = "doctor_dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["appointments"] = Appointment.objects.filter(
+            patient__doctor=self.request.user.doctor, done=False
+        ).order_by("-date")
+        return context
