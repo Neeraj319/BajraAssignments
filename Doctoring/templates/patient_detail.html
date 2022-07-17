@@ -12,10 +12,12 @@
             <h1>
                 {{patient.name}}
                 {% if request.user.receptionist %}
+                {% if patient.appointment %}
+                {% else %}
                 <a href={% url 'patient_appointment_add' patient.pk %} class='btn btn-primary'>
-                    
                     Add new appointment
                 </a>
+                {% endif %}
                 <a href={% url 'patient_edit' patient.pk %} class="btn btn-success" target="_blank"
                 rel="noopener noreferrer">
                 Update patient
@@ -37,7 +39,15 @@
             <br>
             Date Of Birth : {{patient.date_of_birth}}
             <br>
-
+            {% if patient.appointment %}
+            <h3>
+                Appointment Details
+            </h3>
+            Date : {{patient.appointment.date}} {{patient.appointment.time}}
+            <br>
+            Doctor : {{appointment.doctor}}
+            <br>
+            {% endif %}
 
         </div>
     </div>

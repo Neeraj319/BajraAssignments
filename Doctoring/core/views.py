@@ -74,6 +74,7 @@ class PatientDetailView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["patient"] = Patient.objects.get(pk=kwargs["pk"])
+
         return context
 
 
@@ -95,7 +96,7 @@ class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
         return self.get(request, *args, **kwargs)
 
 
-class AppointmentFormView(IsReceptionistMixin, LoginRequiredMixin, TemplateView):
+class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, TemplateView):
     template_name = "appointment_creation.html"
 
     def get_context_data(self, **kwargs):
@@ -146,7 +147,7 @@ class DoctorDashboard(LoginRequiredMixin, IsDoctorMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["appointments"] = Appointment.objects.filter(
             doctor=self.request.user.doctor, done=False
-        ).order_by("-date")
+        )
         return context
 
 

@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    AppointmentFormView,
+    AppointmentCreationView,
     AppointmentListView,
     ChangeAppointmentStatus,
     DoctorDashboard,
@@ -43,7 +43,7 @@ urlpatterns = [
     ),
     path(
         "patient/<int:pk>/appointment/add",
-        view=AppointmentFormView.as_view(),
+        view=AppointmentCreationView.as_view(),
         name="patient_appointment_add",
     ),
     path(
