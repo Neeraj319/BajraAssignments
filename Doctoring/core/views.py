@@ -141,6 +141,20 @@ class DoctorDashboard(LoginRequiredMixin, IsDoctorMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["appointments"] = Appointment.objects.filter(
-            patient__doctor=self.request.user.doctor, done=False
+            doctor=self.request.user.doctor, done=False
         ).order_by("-date")
+        print(context["appointments"])
         return context
+
+
+class ChangeAppointmentStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["appointment"] = Appointment.objects.get(pk=self.kwargs["pk"])
+        return context
+
+    def post(self, request, *args, **kwargs):
+        appointment = Appointment.objects.get(pk=self.kwargs["pk"])
+        appointment.done = True
+        appointment.save()
+        return redirect("doctor_dashboard")

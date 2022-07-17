@@ -11,19 +11,21 @@
         <div class="col-md-12">
             <h1>
                 {{patient.name}}
+                {% if request.user.receptionist %}
                 <a href={% url 'patient_appointment_add' patient.pk %} class='btn btn-primary'>
-
+                    
                     Add new appointment
                 </a>
                 <a href={% url 'patient_edit' patient.pk %} class="btn btn-success" target="_blank"
-                    rel="noopener noreferrer">
-                    Update patient
+                rel="noopener noreferrer">
+                Update patient
 
                 </a>
                 <a href={% url 'patient_delete' patient.pk %} class="btn btn-danger" target="_blank"
                     rel="noopener noreferrer">
                     Delete patient
                 </a>
+                {% endif %}
             </h1>
             phone number: {{patient.phone}}
             <br>

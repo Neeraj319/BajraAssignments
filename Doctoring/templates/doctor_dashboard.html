@@ -1,1 +1,52 @@
+{% extends 'base.html' %}
 
+{% block head %}
+<title>
+    doctor dashboard
+
+</title>
+{% endblock head %}
+
+{% block body %}
+{% include 'navbar.html' %}
+<div class="container">
+    <table class = 'table'>
+        <thead>
+            <tr>
+                <th scope = "col">
+                    Patient
+                </th>
+                <th scope = 'time'>
+                    Date and Time
+                </th>
+                <th scope = 'status'>
+                    Status
+                </th>
+            </tr>
+
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td>
+                    <a href= {% url 'patient_detail' appointment.patient.id %}>
+
+                        {{ appointment.patient.name }}
+                    </a>
+                </td>
+                <td>
+                    {{ appointment.date }}
+                </td>
+                <td>
+                    <input type="checkbox" id="">
+                </td>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+
+</div>
+
+
+{% endblock body %}
