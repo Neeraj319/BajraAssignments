@@ -2,52 +2,59 @@
 
 {% block head %}
 <title>
-    doctor dashboard
-
+    all appointments 
 </title>
-{% endblock head %}
 
+{% endblock head %}
 {% block body %}
 {% include 'navbar.html' %}
 <div class="container">
     <table class = 'table'>
         <thead>
             <tr>
-                <th scope = "col">
-                    Patient
+                <th scope = 'col'>
+                    id
                 </th>
-                <th scope = 'time'>
-                    Date and Time
+                <th scope = 'col'>
+                    patient's name
                 </th>
-                <th scope = 'status'>
-                    Status
+                <th scope = 'col'>
+                    appointment date and time
+                </th>
+                <th scope = 'col'>
+                    status
                 </th>
             </tr>
-
         </thead>
         <tbody>
             {% for appointment in appointments %}
             <tr>
                 <td>
-                    <a href= {% url 'patient_detail' appointment.patient.id %}>
+                    {{ appointment.id }}
+                </td>
+                <td>
+                    <a href = {% url 'patient_detail' appointment.patient.id %}>
 
                         {{ appointment.patient.name }}
                     </a>
                 </td>
                 <td>
-                    {{ appointment.date }}
+                    {{ appointment.date }} {{ appointment.time }}
                 </td>
                 <td>
                     <form action= {% url 'appointment_change' appointment.pk %} method="post">
                         {% csrf_token %}
+                        {% if appointment.done %}
+                        <input type="checkbox" checked = 'checked'>
+                        {% else %}
                         <input type="checkbox">
+                        {% endif %}
                     </form>
                 </td>
-            {% endfor %}
-        </tbody>
+            </tr>
+            {% endfor %}        
 
     </table>
-
 
 </div>
 

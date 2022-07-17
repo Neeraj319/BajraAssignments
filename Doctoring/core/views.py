@@ -95,23 +95,27 @@ class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
         return self.get(request, *args, **kwargs)
 
 
-class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, FormView):
+class AppointmentFormView(IsReceptionistMixin, LoginRequiredMixin, TemplateView):
     template_name = "appointment_creation.html"
-    form_class = AppointmentCreationForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.patient = Patient.objects.get(pk=self.kwargs["pk"])
         context["form"] = AppointmentCreationForm()
+        context["patient"] = self.patient
         return context
 
-    def form_is_valid(self, form):
-        form["patient"] = self.patient
-        form.save()
-        return super().form_is_valid(form)
-
-    def get_success_url(self) -> str:
-        return "/patient/{}".format(self.kwargs["pk"])
+    def post(self, request, *args, **kwargs):
+        form = AppointmentCreationForm(request.POST)
+        if form.is_valid():
+            form.cleaned_data["patient"] = Patient.objects.get(pk=self.kwargs["pk"])
+            Appointment.objects.create(**form.cleaned_data)
+            messages.success(
+                self.request,
+                "Your appointment request has been created successfully. You should receive a confirmation email shortly.",
+            )
+            return redirect("patient_detail", pk=self.kwargs["pk"])
+        return self.get(request, *args, **kwargs)
 
 
 class DeletePatientView(LoginRequiredMixin, IsReceptionistMixin, DeleteView):
@@ -143,7 +147,6 @@ class DoctorDashboard(LoginRequiredMixin, IsDoctorMixin, TemplateView):
         context["appointments"] = Appointment.objects.filter(
             doctor=self.request.user.doctor, done=False
         ).order_by("-date")
-        print(context["appointments"])
         return context
 
 
@@ -155,6 +158,17 @@ class ChangeAppointmentStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         appointment = Appointment.objects.get(pk=self.kwargs["pk"])
-        appointment.done = True
+        appointment.done = not appointment.done
         appointment.save()
         return redirect("doctor_dashboard")
+
+
+class DoctorListAllAppointments(LoginRequiredMixin, IsDoctorMixin, TemplateView):
+    template_name = "doctor_appointments.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["appointments"] = Appointment.objects.filter(
+            doctor=self.request.user.doctor
+        )
+        return context
