@@ -45,9 +45,9 @@
                     <form action= {% url 'appointment_change' appointment.pk %} method="post">
                         {% csrf_token %}
                         {% if appointment.done %}
-                        <input type="checkbox" checked = 'checked'>
+                        <input type="checkbox" class = 'check-box' checked = 'checked'>
                         {% else %}
-                        <input type="checkbox">
+                        <input class = 'check-box' type="checkbox">
                         {% endif %}
                     </form>
                 </td>
@@ -59,10 +59,11 @@
 </div>
 
 <script>
-    const checkbox = document.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener('change', function(e) {
-        const form = e.target.form;
-        form.submit();
+    const checkbox = document.querySelectorAll('.check-box');
+    checkbox.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () { 
+                this.parentElement.submit();
+        });
     });
 </script>
 

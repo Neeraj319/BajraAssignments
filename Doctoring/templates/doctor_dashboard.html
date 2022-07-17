@@ -10,16 +10,16 @@
 {% block body %}
 {% include 'navbar.html' %}
 <div class="container">
-    <table class = 'table'>
+    <table class='table'>
         <thead>
             <tr>
-                <th scope = "col">
+                <th scope="col">
                     Patient
                 </th>
-                <th scope = 'time'>
+                <th scope='time'>
                     Date and Time
                 </th>
-                <th scope = 'status'>
+                <th scope='status'>
                     Status
                 </th>
             </tr>
@@ -29,7 +29,7 @@
             {% for appointment in appointments %}
             <tr>
                 <td>
-                    <a href= {% url 'patient_detail' appointment.patient.id %}>
+                    <a href={% url 'patient_detail' appointment.patient.id %}>
 
                         {{ appointment.patient.name }}
                     </a>
@@ -38,24 +38,24 @@
                     {{ appointment.date }}
                 </td>
                 <td>
-                    <form action= {% url 'appointment_change' appointment.pk %} method="post">
+                    <form action={% url 'appointment_change' appointment.pk %} method="post">
                         {% csrf_token %}
-                        <input type="checkbox">
+                        <input type='checkbox' class='check-box'>
                     </form>
                 </td>
-            {% endfor %}
+                {% endfor %}
         </tbody>
 
     </table>
 
-
 </div>
 
 <script>
-    const checkbox = document.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener('change', function(e) {
-        const form = e.target.form;
-        form.submit();
+    const checkbox = document.querySelectorAll('.check-box');
+    checkbox.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            this.parentElement.submit();
+        });
     });
 </script>
 
