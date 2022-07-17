@@ -120,7 +120,7 @@ class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, TemplateV
             Appointment.objects.create(**form.cleaned_data)
             messages.success(
                 self.request,
-                "Your appointment request has been created successfully. You should receive a confirmation email shortly.",
+                "Your appointment request has been created successfully.",
             )
             return redirect("patient_detail", pk=self.kwargs["pk"])
         return self.get(request, *args, **kwargs)
