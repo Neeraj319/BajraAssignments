@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from typing import Any
 from Auth.mixins import IsDoctorMixin, IsReceptionistMixin
+from Auth.models import Doctor
 
 
 def return_to_dashboard(request: HttpRequest):
@@ -173,3 +174,16 @@ class DoctorListAllAppointments(LoginRequiredMixin, IsDoctorMixin, TemplateView)
             doctor=self.request.user.doctor
         )
         return context
+
+
+class ChangeDoctorStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["doctor"] = Doctor.objects.get(pk=self.kwargs["pk"])
+        return context
+
+    def post(self, request, *args, **kwargs):
+        doctor = request.user.doctor
+        doctor.available = not doctor.available
+        doctor.save()
+        return redirect("doctor_dashboard")

@@ -3,6 +3,7 @@ from .views import (
     AppointmentCreationView,
     AppointmentListView,
     ChangeAppointmentStatus,
+    ChangeDoctorStatus,
     DoctorDashboard,
     DoctorListAllAppointments,
     IndexView,
@@ -70,5 +71,10 @@ urlpatterns = [
         "doctor/appointments",
         view=DoctorListAllAppointments.as_view(),
         name="doctor_appointments",
+    ),
+    path(
+        "doctor/status/change",
+        view=ChangeDoctorStatus.as_view(),
+        name="doctor_status_change",
     ),
 ]
