@@ -92,6 +92,11 @@ def signup_doctor(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
         return redirect("dashboard")
 
 
+def logout_user(request: HttpRequest) -> HttpResponseRedirect:
+    logout(request)
+    return redirect("login")
+
+
 def signup_receptionist(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if not request.user.is_authenticated:
 
