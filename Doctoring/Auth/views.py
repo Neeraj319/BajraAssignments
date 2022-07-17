@@ -1,5 +1,5 @@
 """
-all views are functional based views cause 
+all views are function based views cause 
 it's easier to work with them in small features 
 like login, logout and signup
 """

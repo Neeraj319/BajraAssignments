@@ -18,9 +18,9 @@ from .views import (
 urlpatterns = [
     path("", view=IndexView.as_view(), name="index"),
     path(
-        "patient",
+        "patient/create",
         view=CreatePatientRecordView.as_view(),
-        name="patient",
+        name="create_patient",
     ),
     path(
         "dashboard",

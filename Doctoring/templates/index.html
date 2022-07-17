@@ -17,7 +17,7 @@
     {% endfor %}
   </ul>
   {% endif %}
-  <form action="{% url 'patient' %}" method="post">
+  <form action="{% url 'create_patient' %}" method="post">
     {% csrf_token %}
     {{form.as_p}}
     <input type="submit" class="btn btn-primary" value="submit">
