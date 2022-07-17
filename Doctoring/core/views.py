@@ -1,4 +1,3 @@
-import imp
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from .forms import PatientCreationForm, AppointmentCreationForm
 from django.views.generic import TemplateView
@@ -15,6 +14,10 @@ from django.db.models import QuerySet
 
 
 def return_to_dashboard(request: HttpRequest):
+    """
+    this view is here to return logged in user to their
+    specific dashboard page
+    """
     if hasattr(request.user, "receptionist"):
         return redirect("receptionist_dashboard")
     else:
@@ -59,7 +62,7 @@ class AppointmentListView(LoginRequiredMixin, IsReceptionistMixin, ListView):
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["appointments"]: Appointment = Appointment.objects.all()
+        context["appointments"]: QuerySet[Appointment] = Appointment.objects.all()
         return context
 
 
@@ -68,8 +71,8 @@ class ReceptionistDashboard(LoginRequiredMixin, IsReceptionistMixin, TemplateVie
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        query_set = Patient.objects.filter(appointment__isnull=True)
-        context["patients"]: Patient = query_set
+        query_set: QuerySet[Patient] = Patient.objects.filter(appointment__isnull=True)
+        context["patients"] = query_set
         return context
 
 
@@ -84,7 +87,7 @@ class PatientDetailView(LoginRequiredMixin, TemplateView):
 
 
 class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
-    template_name = "patient_edit.html"
+    template_name: str = "patient_edit.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -94,7 +97,9 @@ class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
         )
         return context
 
-    def post(self, request, *args, **kwargs) -> HttpResponseRedirect | HttpResponse:
+    def post(
+        self, request: HttpRequest, *args, **kwargs
+    ) -> HttpResponseRedirect | HttpResponse:
         patient: Patient = Patient.objects.get(pk=kwargs["pk"])
         form: PatientCreationForm = PatientCreationForm(request.POST, instance=patient)
         if form.is_valid():
@@ -104,7 +109,7 @@ class PatientEditView(LoginRequiredMixin, IsReceptionistMixin, TemplateView):
 
 
 class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, TemplateView):
-    template_name = "appointment_creation.html"
+    template_name: str = "appointment_creation.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -113,10 +118,14 @@ class AppointmentCreationView(IsReceptionistMixin, LoginRequiredMixin, TemplateV
         context["patient"]: Patient = self.patient
         return context
 
-    def post(self, request, *args, **kwargs) -> HttpResponseRedirect | HttpResponse:
+    def post(
+        self, request: HttpRequest, *args, **kwargs
+    ) -> HttpResponseRedirect | HttpResponse:
         form: AppointmentCreationForm = AppointmentCreationForm(request.POST)
         if form.is_valid():
-            form.cleaned_data["patient"] = Patient.objects.get(pk=self.kwargs["pk"])
+            form.cleaned_data["patient"]: Patient = Patient.objects.get(
+                pk=self.kwargs["pk"]
+            )
             Appointment.objects.create(**form.cleaned_data)
             messages.success(
                 self.request,
@@ -136,7 +145,7 @@ class DeletePatientView(LoginRequiredMixin, IsReceptionistMixin, DeleteView):
         context["patient"]: Patient = Patient.objects.get(pk=self.kwargs["pk"])
         return context
 
-    def delete(self, request, *args, **kwargs) -> HttpResponse:
+    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         messages.success(
             self.request,
             "Your patient record has been deleted successfully.",
@@ -166,15 +175,15 @@ class ChangeAppointmentStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
         )
         return context
 
-    def post(self, request, *args, **kwargs) -> HttpResponseRedirect:
-        appointment = Appointment.objects.get(pk=self.kwargs["pk"])
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponseRedirect:
+        appointment: Appointment = Appointment.objects.get(pk=self.kwargs["pk"])
         appointment.done = not appointment.done
         appointment.save()
         return redirect("doctor_dashboard")
 
 
 class DoctorListAllAppointments(LoginRequiredMixin, IsDoctorMixin, TemplateView):
-    template_name = "doctor_appointments.html"
+    template_name: str = "doctor_appointments.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
@@ -187,11 +196,11 @@ class DoctorListAllAppointments(LoginRequiredMixin, IsDoctorMixin, TemplateView)
 class ChangeDoctorStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["doctor"] = Doctor.objects.get(pk=self.kwargs["pk"])
+        context["doctor"]: Doctor = Doctor.objects.get(pk=self.kwargs["pk"])
         return context
 
-    def post(self, request, *args, **kwargs) -> HttpResponseRedirect:
-        doctor = request.user.doctor
+    def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponseRedirect:
+        doctor: Doctor = request.user.doctor
         doctor.available = not doctor.available
         doctor.save()
         return redirect("doctor_dashboard")

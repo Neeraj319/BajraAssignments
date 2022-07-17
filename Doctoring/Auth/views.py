@@ -1,3 +1,8 @@
+"""
+all views are functional based views cause 
+it's easier to work with them in small features 
+like login, logout and signup
+"""
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -32,7 +37,10 @@ def signup(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
         return redirect("dashboard")
 
 
-def validate_credentials(username, password, confirm_password, phone) -> str | None:
+def validate_form_data(
+    username: str, password: str, confirm_password: str, phone: str
+) -> str | None:
+
     if User.objects.filter(username=username).first():
         return "Username already exists"
     if password != confirm_password:
@@ -58,7 +66,7 @@ def signup_doctor(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
             years_practiced = request.POST.get("years_practiced")
             gender = request.POST.get.get("gender")
 
-            if message := validate_credentials(
+            if message := validate_form_data(
                 username=username,
                 password=password,
                 confirm_password=confirm_password,
@@ -109,7 +117,7 @@ def signup_receptionist(request: HttpRequest) -> HttpResponse | HttpResponseRedi
             email = request.POST.get("email")
             phone = request.POST.get("phone")
 
-            if message := validate_credentials(
+            if message := validate_form_data(
                 username=username,
                 password=password,
                 confirm_password=confirm_password,
@@ -118,7 +126,7 @@ def signup_receptionist(request: HttpRequest) -> HttpResponse | HttpResponseRedi
                 messages.error(request, message)
                 return redirect("signup")
 
-            user = User.objects.create_user(
+            user: User = User.objects.create_user(
                 username=username,
                 password=password,
                 first_name=first_name,
