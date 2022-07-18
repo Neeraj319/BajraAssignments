@@ -17,11 +17,3 @@ class Doctor(models.Model):
 
     def __str__(self: "Doctor") -> str:
         return f"{self.user.first_name} {self.user.last_name}"
-
-
-class Receptionist(models.Model):
-    user: User = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = PhoneNumberField(null=True, blank=True)
-
-    def __str__(self: "Receptionist") -> str:
-        return f"{self.user.first_name} {self.user.last_name}"

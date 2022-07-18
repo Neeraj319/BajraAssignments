@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "core",
     "Auth",
     "phonenumber_field",
+    "receptionist",
 ]
 
 MIDDLEWARE = [
