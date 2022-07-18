@@ -9,6 +9,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from .models import Doctor, Receptionist
 from django.contrib.auth.models import User
+from .helpers import get_form_data, validate_form_data
 
 
 def login_user(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
@@ -37,57 +38,33 @@ def signup(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
         return redirect("dashboard")
 
 
-def validate_form_data(
-    username: str, password: str, confirm_password: str, phone: str
-) -> str | None:
-
-    if User.objects.filter(username=username).first():
-        return "Username already exists"
-    if password != confirm_password:
-        return "Passwords do not match"
-    if len(password) < 8:
-        return "Password must be at least 8 characters"
-    if len(phone) > 15:
-        return "Phone number must be smaller than 15 digits"
-
-
 def signup_doctor(request: HttpRequest) -> HttpResponse | HttpResponseRedirect:
     if not request.user.is_authenticated:
 
         if request.method == "POST":
-            username = request.POST.get("username")
-            password = request.POST.get("password")
-            confirm_password = request.POST.get("confirm_password")
-            first_name = request.POST.get("first_name")
-            last_name = request.POST.get("last_name")
-            email = request.POST.get("email")
-            phone = request.POST.get("phone")
-            qualification = request.POST.get("qualification")
-            years_practiced = request.POST.get("years_practiced")
-            gender = request.POST.get.get("gender")
-
+            form_data = get_form_data(request=request)
             if message := validate_form_data(
-                username=username,
-                password=password,
-                confirm_password=confirm_password,
-                phone=phone,
+                username=form_data["username"],
+                password=form_data["password"],
+                confirm_password=form_data["confirm_password"],
+                phone=form_data["phone"],
             ):
                 messages.error(request, message)
                 return redirect("signup")
 
             user = User.objects.create_user(
-                username=username,
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
+                username=form_data["username"],
+                password=form_data["password"],
+                first_name=form_data["first_name"],
+                last_name=form_data["last_name"],
+                email=form_data["email"],
             )
             Doctor.objects.create(
                 user=user,
-                phone=phone,
-                qualification=qualification,
-                years_practiced=years_practiced,
-                gender=gender,
+                phone=form_data["phone"],
+                qualification=form_data["qualification"],
+                years_practiced=form_data["years_practiced"],
+                gender=form_data["gender"],
             )
             messages.success(
                 request,
@@ -109,33 +86,26 @@ def signup_receptionist(request: HttpRequest) -> HttpResponse | HttpResponseRedi
     if not request.user.is_authenticated:
 
         if request.method == "POST":
-            username = request.POST.get("username")
-            password = request.POST.get("password")
-            confirm_password = request.POST.get("confirm_password")
-            first_name = request.POST.get("first_name")
-            last_name = request.POST.get("last_name")
-            email = request.POST.get("email")
-            phone = request.POST.get("phone")
-
+            form_data = get_form_data(request=request)
             if message := validate_form_data(
-                username=username,
-                password=password,
-                confirm_password=confirm_password,
-                phone=phone,
+                username=form_data["username"],
+                password=form_data["password"],
+                confirm_password=form_data["confirm_password"],
+                phone=form_data["phone"],
             ):
                 messages.error(request, message)
                 return redirect("signup")
 
             user: User = User.objects.create_user(
-                username=username,
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
+                username=form_data["username"],
+                password=form_data["password"],
+                first_name=form_data["first_name"],
+                last_name=form_data["last_name"],
+                email=form_data["email"],
             )
             Receptionist.objects.create(
                 user=user,
-                phone=phone,
+                phone=form_data["phone"],
             )
             messages.success(
                 request,
