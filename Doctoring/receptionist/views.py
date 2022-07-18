@@ -91,12 +91,12 @@ class DeletePatientView(LoginRequiredMixin, IsReceptionistMixin, DeleteView):
         context["patient"]: Patient = Patient.objects.get(pk=self.kwargs["pk"])
         return context
 
-    def delete(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+    def form_valid(self, form: PatientCreationForm) -> HttpResponseRedirect:
         messages.success(
             self.request,
             "Your patient record has been deleted successfully.",
         )
-        return super().delete(request, *args, **kwargs)
+        return super().form_valid(form)
 
     def get_success_url(self) -> str:
         return "/"
