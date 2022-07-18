@@ -2,29 +2,29 @@
 
 {% block head %}
 <title>
-    all appointments 
+    all appointments
 </title>
 
 {% endblock head %}
 {% block body %}
 {% include 'navbar.html' %}
 <div class="container">
-    <table class = 'table'>
+    <table class='table'>
         <thead>
             <tr>
-                <th scope = 'col'>
+                <th scope='col'>
                     id
                 </th>
-                <th scope = 'col'>
+                <th scope='col'>
                     patient's name
                 </th>
-                <th scope = 'col'>
+                <th scope='col'>
                     doctor's name
                 </th>
-                <th scope = 'col'>
+                <th scope='col'>
                     appointment date and time
                 </th>
-                <th scope = 'col'>
+                <th scope='col'>
                     status
                 </th>
             </tr>
@@ -36,7 +36,7 @@
                     {{ appointment.id }}
                 </td>
                 <td>
-                    <a href = {% url 'patient_detail' appointment.patient.id %}>
+                    <a href={% url 'patient_detail' appointment.patient.id %}>
 
                         {{ appointment.patient.name }}
                     </a>
@@ -49,13 +49,13 @@
                 </td>
                 <td>
                     {% if appointment.done %}
-                    <input checked = 'checked' name='test' type='checkbox' style="pointer-events: none;"/>
+                    <input checked='checked' name='test' type='checkbox' style="pointer-events: none;" />
                     {% else %}
-                    <input  type='checkbox' style = 'pointer-events:none;' />
+                    <input type='checkbox' style='pointer-events:none;' />
                     {% endif %}
                 </td>
             </tr>
-            {% endfor %}        
+            {% endfor %}
 
     </table>
 

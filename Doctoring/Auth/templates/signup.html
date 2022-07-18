@@ -69,6 +69,9 @@
             <option value="female">Female</option>
             </select>
             <input class = 'btn btn-primary' type = 'submit' value = 'submit'/>
+            <a href = {% url 'login' %}>
+                already have an account? login from here
+            </a>
         `
             toggle.innerHTML = "as a receptionist?"
             signUpDiv.appendChild(doctorSignup)
@@ -98,6 +101,9 @@
             <input type="text" name="phone" class = 'form-control' id="phone" required>
             <br>
             <input type = 'submit' class = 'btn btn-primary' value = 'submit'/>
+            <a href = {% url 'login' %}>
+                already have an account? login from here
+            </a>
         `
             toggle.innerText = "as a doctor?"
             signUpDiv.appendChild(receptionistSignup)

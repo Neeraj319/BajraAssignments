@@ -8,7 +8,14 @@
 <div class="container">
 
   <h1>
-    Create an Appointment
+    Request for an Appointment
+    <a href={% url 'login' %} class='btn btn-danger'>
+      login
+    </a>
+
+    <a href={% url 'signup' %} class='btn btn-danger'>
+      signup
+    </a>
   </h1>
   {% if messages %}
   <ul class="messages">

@@ -2,26 +2,26 @@
 
 {% block head %}
 <title>
-    all appointments 
+    all appointments
 </title>
 
 {% endblock head %}
 {% block body %}
 {% include 'navbar.html' %}
 <div class="container">
-    <table class = 'table'>
+    <table class='table'>
         <thead>
             <tr>
-                <th scope = 'col'>
+                <th scope='col'>
                     id
                 </th>
-                <th scope = 'col'>
+                <th scope='col'>
                     patient's name
                 </th>
-                <th scope = 'col'>
+                <th scope='col'>
                     appointment date and time
                 </th>
-                <th scope = 'col'>
+                <th scope='col'>
                     status
                 </th>
             </tr>
@@ -33,7 +33,7 @@
                     {{ appointment.id }}
                 </td>
                 <td>
-                    <a href = {% url 'patient_detail' appointment.patient.id %}>
+                    <a href={% url 'patient_detail' appointment.patient.id %}>
 
                         {{ appointment.patient.name }}
                     </a>
@@ -42,17 +42,17 @@
                     {{ appointment.date }} {{ appointment.time }}
                 </td>
                 <td>
-                    <form action= {% url 'appointment_change' appointment.pk %} method="post">
+                    <form action={% url 'appointment_change' appointment.pk %} method="post">
                         {% csrf_token %}
                         {% if appointment.done %}
-                        <input type="checkbox" class = 'check-box' checked = 'checked'>
+                        <input type="checkbox" class='check-box' checked='checked'>
                         {% else %}
-                        <input class = 'check-box' type="checkbox">
+                        <input class='check-box' type="checkbox">
                         {% endif %}
                     </form>
                 </td>
             </tr>
-            {% endfor %}        
+            {% endfor %}
 
     </table>
 
@@ -61,8 +61,8 @@
 <script>
     const checkbox = document.querySelectorAll('.check-box');
     checkbox.forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () { 
-                this.parentElement.submit();
+        checkbox.addEventListener('change', function () {
+            this.parentElement.submit();
         });
     });
 </script>
