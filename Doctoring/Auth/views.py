@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate, logout
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
-from .models import Doctor
+from doctor.models import Doctor
 from receptionist.models import Receptionist
 from django.contrib.auth.models import User
 from .helpers import get_form_data, validate_form_data

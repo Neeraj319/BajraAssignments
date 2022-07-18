@@ -1,6 +1,6 @@
 from django import forms
 from .models import Patient, Appointment
-from Auth.models import Doctor
+from doctor.models import Doctor
 
 
 class PatientCreationForm(forms.ModelForm):

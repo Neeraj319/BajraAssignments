@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "Auth",
     "phonenumber_field",
     "receptionist",
+    "doctor",
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,5 @@
 from django.db import models
-from Auth.models import Doctor
+from doctor.models import Doctor
 from phonenumber_field.modelfields import PhoneNumberField
 
 
