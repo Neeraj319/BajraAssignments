@@ -13,6 +13,12 @@ from django.db.models import QuerySet
 
 
 class AppointmentListView(LoginRequiredMixin, IsReceptionistMixin, ListView):
+    """
+    This one is specific to the receptionist.
+    Functionality according to the user are separated from
+    receptionist's view and doctor's view
+    """
+
     model: Appointment = Appointment
     template_name: str = "all_appointments.html"
 

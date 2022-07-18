@@ -36,6 +36,13 @@ class ChangeAppointmentStatus(LoginRequiredMixin, IsDoctorMixin, TemplateView):
 
 
 class DoctorListAllAppointments(LoginRequiredMixin, IsDoctorMixin, TemplateView):
+    """
+    This one is specific to the doctor.
+    Functionality according to the user are separated from
+    receptionist's view and doctor's view
+
+    """
+
     template_name: str = "doctor_appointments.html"
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
