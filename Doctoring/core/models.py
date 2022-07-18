@@ -1,11 +1,12 @@
 from django.db import models
 from Auth.models import Doctor
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Patient(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
-    phone = models.CharField(max_length=100)
+    phone = PhoneNumberField(null=True, blank=True)
     email = models.EmailField()
     date_of_birth = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)

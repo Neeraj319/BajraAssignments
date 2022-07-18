@@ -57,7 +57,7 @@
             <label for="confirm_password">Confirm Password</label>
             <input type="password" name="confirm_password" class = 'form-control' id="confirm-password" required>
             <label for="phone">Phone</label>
-            <input type="text" name="phone" class = 'form-control' id="phone" required>
+            <input type="text" name="phone" value = '+977' class = 'form-control' id="phone" required>
             <label for = 'years-of-experience'>Years of Experience</label>
             <input type="number" class = 'form-control' name="years_practiced" id="years-of-experience" required>
             <label for = 'qualification'>Qualification</label>
@@ -71,6 +71,7 @@
             <a href = {% url 'login' %}>
                 already have an account? login from here
             </a>
+        </form>
         `
             toggle.innerHTML = "as a receptionist?"
             signUpDiv.appendChild(doctorSignup)
@@ -97,12 +98,13 @@
             <label for="confirm_password">Confirm Password</label>
             <input type="password" name="confirm_password" class = 'form-control' id="confirm-password" required>
             <label for="phone">Phone</label>
-            <input type="text" name="phone" class = 'form-control' id="phone" required>
+            <input type="text" value = '+977' name="phone" class = 'form-control' id="phone" required>
             <br>
             <input type = 'submit' class = 'btn btn-primary' value = 'submit'/>
             <a href = {% url 'login' %}>
                 already have an account? login from here
             </a>
+        </form>
         `
             toggle.innerText = "as a doctor?"
             signUpDiv.appendChild(receptionistSignup)

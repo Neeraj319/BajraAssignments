@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block head %}
 <title>
   Doctoring
@@ -31,4 +32,6 @@
   </form>
 
 </div>
+<script src={% static '/scripts/validate.js' %}>
+</script>
 {% endblock %}

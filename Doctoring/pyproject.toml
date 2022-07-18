@@ -9,6 +9,7 @@ python = "^3.10"
 Django = "^4.0.6"
 python-dotenv = "^0.20.0"
 psycopg2-binary = "^2.9.3"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "^6.3.0"}
 
 [tool.poetry.dev-dependencies]
 black = {version = "^22.6.0", allow-prereleases = true}

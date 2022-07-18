@@ -46,6 +46,7 @@ class CreatePatientRecordView(FormView):
 
     def form_valid(self, form: PatientCreationForm) -> HttpResponseRedirect:
         form.save()
+
         messages.success(
             self.request,
             "Your appointment request has been created successfully. You should receive a confirmation email shortly.",
