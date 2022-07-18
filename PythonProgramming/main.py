@@ -60,9 +60,9 @@ class Solution:
         return self
 
     def treasure(self) -> None:
-        self.keys_list = [52, 51, 61, 71, 56]
+        keys_list = [52, 51, 61, 71, 56]
 
-        sum_list = [i + int(j) for i, j in zip(self.character_dict, self.keys_list)]
+        sum_list = [i + int(j) for i, j in zip(self.character_dict, keys_list)]
         print("tressure: ", end="")
         print(*[chr(i) for i in sum_list], sep="")
 
